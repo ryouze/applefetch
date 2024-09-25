@@ -140,8 +140,8 @@ int test_args::none()
 int test_args::help()
 {
     try {
-        const char *fake_argv[] = {TEST_EXECUTABLE_NAME, "-h"};
-        core::args::Args(2, const_cast<char **>(fake_argv));
+        char *fake_argv[] = {const_cast<char *>(TEST_EXECUTABLE_NAME), const_cast<char *>("-h")};
+        core::args::Args(2, fake_argv);
         // This should never be reached, as the ArgsError exception should be thrown by the constructor
         fmt::print("core::args::Args() failed: no help message displayed.\n");
         return EXIT_FAILURE;
@@ -155,8 +155,8 @@ int test_args::help()
 int test_args::version()
 {
     try {
-        const char *fake_argv[] = {TEST_EXECUTABLE_NAME, "-v"};
-        core::args::Args(2, const_cast<char **>(fake_argv));
+        char *fake_argv[] = {const_cast<char *>(TEST_EXECUTABLE_NAME), const_cast<char *>("-v")};
+        core::args::Args(2, fake_argv);
         // This should never be reached, as the ArgsError exception should be thrown by the constructor
         fmt::print("core::args::Args() failed: no version displayed.\n");
         return EXIT_FAILURE;
@@ -170,8 +170,8 @@ int test_args::version()
 int test_args::invalid()
 {
     try {
-        const char *fake_argv[] = {TEST_EXECUTABLE_NAME, "hello"};
-        core::args::Args(2, const_cast<char **>(fake_argv));
+        char *fake_argv[] = {const_cast<char *>(TEST_EXECUTABLE_NAME), const_cast<char *>("hello")};
+        core::args::Args(2, fake_argv);
         // This should never be reached, as the ArgsError exception should be thrown by the constructor
         fmt::print("core::args::Args() failed: invalid argument wasn't caught.\n");
         return EXIT_FAILURE;
