@@ -33,7 +33,7 @@ std::string get_version()
     try {
         return fmt::format("macOS {}", core::sysctl::get_value("kern.osproductversion"));
     }
-    catch (const core::sysctl::SysCtlError &e) {
+    catch (const std::runtime_error &e) {
         return fmt::format("Unknown macOS version ({})", e.what());
     }
 }
@@ -43,7 +43,7 @@ std::string get_model_identifier()
     try {
         return core::sysctl::get_value("hw.model");
     }
-    catch (const core::sysctl::SysCtlError &e) {
+    catch (const std::runtime_error &e) {
         return fmt::format("Unknown model identifier ({})", e.what());
     }
 }
@@ -89,7 +89,7 @@ std::string get_packages()
             const std::string test = core::shell::get_output("command -v brew");
             return "Unknown number of packages (Failed to get brew list, but brew is installed)";
         }
-        catch (const core::shell::ShellError &) {
+        catch (const std::runtime_error &) {
             return "Unknown number of packages (Brew is not installed)";
         }
     }
@@ -100,7 +100,7 @@ std::string get_shell()
     try {
         return core::env::get_variable("SHELL");
     }
-    catch (const core::env::EnvError &e) {
+    catch (const std::runtime_error &e) {
         return fmt::format("Unknown shell ({})", e.what());
     }
 }

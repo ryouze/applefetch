@@ -26,7 +26,7 @@ void run()
             color_enabled = false;
         }
     }
-    catch (const core::env::EnvError &) {
+    catch (const std::runtime_error &) {
         // NO_COLOR is not set, so color remains enabled by default
     }
 

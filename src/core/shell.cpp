@@ -21,7 +21,7 @@ std::string get_output(const std::string &command)
 
     // If failed to execute command, throw
     if (!pipe) {
-        throw ShellError(fmt::format("Failed to execute command: {}", command));
+        throw std::runtime_error(fmt::format("Failed to execute command: {}", command));
     }
 
     // Read output of command to string
@@ -31,7 +31,7 @@ std::string get_output(const std::string &command)
 
     // If empty string, throw
     if (result.empty()) {
-        throw ShellError(fmt::format("Command '{}' returned no output", command));
+        throw std::runtime_error(fmt::format("Command '{}' returned no output", command));
     }
     return result;
 }

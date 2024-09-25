@@ -17,15 +17,6 @@
 namespace core::sysctl {
 
 /**
- * @brief Exception raised by the sysctl command.
- */
-class SysCtlError : public std::runtime_error {
-  public:
-    explicit SysCtlError(const std::string &message)
-        : std::runtime_error(message) {}
-};
-
-/**
  * @brief Get the value of a sysctl variable.
  *
  * Template function that handles various types of sysctl values.
@@ -35,7 +26,7 @@ class SysCtlError : public std::runtime_error {
  *
  * @return Value of the sysctl variable of the specified type (e.g., '17179869184").
  *
- * @throws SysCtlError If failed to get the sysctl value.
+ * @throws std::runtime_error If failed to get the sysctl value.
  */
 template <typename T>
 [[nodiscard]] inline T get_value(const std::string &name)
@@ -46,7 +37,7 @@ template <typename T>
     std::size_t size = sizeof(T);
 
     if (sysctlbyname(name.c_str(), &value, &size, nullptr, 0) != 0) {
-        throw SysCtlError(fmt::format("Failed to get sysctl value for '{}'", name));
+        throw std::runtime_error(fmt::format("Failed to get sysctl value for '{}'", name));
     }
 
     return value;
@@ -61,14 +52,14 @@ template <typename T>
  *
  * @return Value of the sysctl variable as a string (e.g., "14.6.1").
  *
- * @throws SysCtlError If failed to get the sysctl value.
+ * @throws std::runtime_error If failed to get the sysctl value.
  */
 [[nodiscard]] inline std::string get_value(const std::string &name)
 {
     std::size_t size;
     // First call with nullptr to determine required buffer size
     if (sysctlbyname(name.c_str(), nullptr, &size, nullptr, 0) != 0) {
-        throw SysCtlError(fmt::format("Failed to get sysctl value size for '{}'", name));
+        throw std::runtime_error(fmt::format("Failed to get sysctl value size for '{}'", name));
     }
 
     // Allocate buffer based on required size
@@ -76,7 +67,7 @@ template <typename T>
 
     // Second call to get the actual data
     if (sysctlbyname(name.c_str(), buffer.data(), &size, nullptr, 0) != 0) {
-        throw SysCtlError(fmt::format("Failed to get sysctl value for '{}'", name));
+        throw std::runtime_error(fmt::format("Failed to get sysctl value for '{}'", name));
     }
 
     // Remove null terminator from buffer

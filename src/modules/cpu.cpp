@@ -16,7 +16,7 @@ std::string get_cpu_model()
     try {
         return core::sysctl::get_value("machdep.cpu.brand_string");
     }
-    catch (const core::sysctl::SysCtlError &e) {
+    catch (const std::runtime_error &e) {
         return fmt::format("Unknown CPU model {}", e.what());
     }
 }
