@@ -2,7 +2,9 @@
  * @file host.cpp
  */
 
+#include <algorithm>      // for std::remove_if
 #include <array>          // for std::array
+#include <cctype>         // for std::isspace, std::isdigit
 #include <cstddef>        // for std::size_t
 #include <exception>      // for std::exception
 #include <stdexcept>      // for std::runtime_error
@@ -81,29 +83,32 @@ std::string get_uptime()
 
 std::string get_packages()
 {
+    // Attempt to get the number of packages, assuming brew is installed
+    if (auto output = core::shell::get_output("brew list | wc -l")) {
+        // Trim whitespace from the output
+        output->erase(std::remove_if(output->begin(), output->end(), std::isspace), output->cend());
 
-    if (const auto output = core::shell::get_output("brew list | wc -l")) {
-        try {
-            return std::to_string(std::stoi(output.value()));
-        }
-        catch (const std::exception &) {
-            // Check if brew installed
-            if (core::shell::get_output("command -v brew")) {
-                return "Unknown number of packages (Brew is installed)";
+        // Check if the output is a valid number
+        if (!output->empty() && std::all_of(output->begin(), output->end(), std::isdigit)) {
+            try {
+                // Convert to integer and back to string to normalize
+                const int package_count = std::stoi(output.value());
+                return std::to_string(package_count);
             }
-            else {
-                return "Unknown number of packages (Brew is not installed)";
+            catch (const std::exception &) {
+                // If std::stoi throws an exception, proceed to check if brew is installed
+                // This is unlikely after validation but included for safety
             }
         }
     }
+
+    // If we reach here, the command failed or output was invalid
+    // Now check if brew is installed
+    if (core::shell::get_output("command -v brew")) {
+        return "Unknown number of packages (Failed to get brew list)";
+    }
     else {
-        // Check if brew installed
-        if (core::shell::get_output("command -v brew")) {
-            return "Unknown number of packages (Brew is installed)";
-        }
-        else {
-            return "Unknown number of packages (Brew is not installed)";
-        }
+        return "Unknown number of packages (Brew is not installed)";
     }
 }
 
