@@ -54,10 +54,12 @@ namespace test_memory {
  * @param argc Number of command-line arguments (e.g., "2").
  * @param argv Array of command-line arguments (e.g., {"./bin", "-h"}).
  *
- * @return EXIT_SUCCESS if the application ran successfully, EXIT_FAILURE otherwise.
+ * @return EXIT_SUCCESS if the test application ran successfully, EXIT_FAILURE otherwise.
  */
-int main(int argc, char **argv)
+int main(int argc,
+         char **argv)
 {
+
     // Define the formatted help message
     const std::string help_message = fmt::format(
         "Usage: {} <test>\n"
@@ -74,7 +76,7 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    // Map of test names to functions
+    // Otherwise, define argument to function mapping
     const std::unordered_map<std::string, std::function<int()>> tests = {
         {"test_args::none", test_args::none},
         {"test_args::help", test_args::help},
@@ -92,14 +94,14 @@ int main(int argc, char **argv)
         {"test_memory::get_memory_usage", test_memory::get_memory_usage},
     };
 
-    // Get the first argument as a string
-    const std::string arg = argv[1];
+    // Get the test name from the command-line arguments
+    const std::string test_name = argv[1];
 
-    // If found in the map, run the test
-    if (const auto it = tests.find(arg); it != tests.cend()) {
+    // If the test name is found, run the corresponding test
+    if (const auto it = tests.find(test_name); it != tests.cend()) {
         return it->second();
     }
-    else if (arg == "all") {
+    else if (test_name == "all") {
         // Run all tests sequentially and print the results
         bool all_passed = true;
         for (const auto &[name, test_func] : tests) {
@@ -116,7 +118,7 @@ int main(int argc, char **argv)
         return all_passed ? EXIT_SUCCESS : EXIT_FAILURE;
     }
     else {
-        fmt::print("Error: Invalid argument: {}\n\n{}\n", arg, help_message);
+        fmt::print(stderr, "Error: Invalid test name: '{}'\n\n{}\n", test_name, help_message);
         return EXIT_FAILURE;
     }
 }
