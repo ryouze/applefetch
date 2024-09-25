@@ -17,7 +17,9 @@
 #include "core/sysctl.hpp"
 #include "host.hpp"
 
-// std::string modules::host::get_hostname()
+namespace modules::host {
+
+// std::string get_hostname()
 // {
 //     struct utsname uts;
 //     if (uname(&uts) != 0) {
@@ -26,7 +28,7 @@
 //     return uts.nodename;
 // }
 
-std::string modules::host::get_version()
+std::string get_version()
 {
     try {
         return fmt::format("macOS {}", core::sysctl::get_value("kern.osproductversion"));
@@ -36,7 +38,7 @@ std::string modules::host::get_version()
     }
 }
 
-std::string modules::host::get_model_identifier()
+std::string get_model_identifier()
 {
     try {
         return core::sysctl::get_value("hw.model");
@@ -46,7 +48,7 @@ std::string modules::host::get_model_identifier()
     }
 }
 
-std::string modules::host::get_architecture()
+std::string get_architecture()
 {
     struct utsname uts;
     if (uname(&uts) != 0) {
@@ -55,7 +57,7 @@ std::string modules::host::get_architecture()
     return uts.machine;
 }
 
-std::string modules::host::get_uptime()
+std::string get_uptime()
 {
     struct timeval boottime;
     std::size_t len = sizeof(boottime);
@@ -76,7 +78,7 @@ std::string modules::host::get_uptime()
     return fmt::format("{}d {}h {}m", days, hours, minutes);
 }
 
-std::string modules::host::get_packages()
+std::string get_packages()
 {
     try {
         return std::to_string(std::stoi(core::shell::get_output("brew list | wc -l")));
@@ -93,7 +95,7 @@ std::string modules::host::get_packages()
     }
 }
 
-std::string modules::host::get_shell()
+std::string get_shell()
 {
     try {
         return core::env::get_variable("SHELL");
@@ -102,3 +104,5 @@ std::string modules::host::get_shell()
         return fmt::format("Unknown shell ({})", e.what());
     }
 }
+
+}  // namespace modules::host

@@ -11,7 +11,9 @@
 
 #include "shell.hpp"
 
-std::string core::shell::get_output(const std::string &command)
+namespace core::shell {
+
+std::string get_output(const std::string &command)
 {
     std::array<char, 128> buffer;
     std::string result;
@@ -19,7 +21,7 @@ std::string core::shell::get_output(const std::string &command)
 
     // If failed to execute command, throw
     if (!pipe) {
-        throw core::shell::ShellError(fmt::format("Failed to execute command: {}", command));
+        throw ShellError(fmt::format("Failed to execute command: {}", command));
     }
 
     // Read output of command to string
@@ -29,7 +31,9 @@ std::string core::shell::get_output(const std::string &command)
 
     // If empty string, throw
     if (result.empty()) {
-        throw core::shell::ShellError(fmt::format("Command '{}' returned no output", command));
+        throw ShellError(fmt::format("Command '{}' returned no output", command));
     }
     return result;
 }
+
+}  // namespace core::shell

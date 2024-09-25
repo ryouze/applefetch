@@ -9,11 +9,15 @@
 
 #include "env.hpp"
 
-std::string core::env::get_variable(const std::string &name)
+namespace core::env {
+
+std::string get_variable(const std::string &name)
 {
     const char *value = std::getenv(name.c_str());
     if (!value) {
-        throw core::env::EnvError(fmt::format("Environment variable not found: {}", name));
+        throw EnvError(fmt::format("Environment variable not found: {}", name));
     }
     return std::string(value);
 }
+
+}  // namespace core::env

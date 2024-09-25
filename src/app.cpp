@@ -14,7 +14,9 @@
 #include "modules/host.hpp"
 #include "modules/memory.hpp"
 
-void app::run()
+namespace app {
+
+void run()
 {
     // Check for NO_COLOR environment variable to determine if color should be disabled
     bool color_enabled = true;
@@ -72,3 +74,5 @@ void app::run()
     print_title("Memory");
     print_value(modules::memory::get_memory_usage());
 }
+
+}  // namespace app

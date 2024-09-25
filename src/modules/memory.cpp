@@ -13,7 +13,9 @@
 #include "core/sysctl.hpp"
 #include "memory.hpp"
 
-std::string modules::memory::get_memory_usage()
+namespace modules::memory {
+
+std::string get_memory_usage()
 {
     try {
         // Fetch total physical memory using the sysctl abstraction
@@ -50,3 +52,5 @@ std::string modules::memory::get_memory_usage()
         return fmt::format("Unknown memory usage ({})", e.what());
     }
 }
+
+}  // namespace modules::memory

@@ -9,7 +9,9 @@
 #include "core/sysctl.hpp"
 #include "cpu.hpp"
 
-std::string modules::cpu::get_cpu_model()
+namespace modules::cpu {
+
+std::string get_cpu_model()
 {
     try {
         return core::sysctl::get_value("machdep.cpu.brand_string");
@@ -18,3 +20,5 @@ std::string modules::cpu::get_cpu_model()
         return fmt::format("Unknown CPU model {}", e.what());
     }
 }
+
+}  // namespace modules::cpu

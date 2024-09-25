@@ -13,7 +13,9 @@
 
 #include "display.hpp"
 
-std::string modules::display::get_resolution()
+namespace modules::display {
+
+std::string get_resolution()
 {
     const CGDirectDisplayID display_id = CGMainDisplayID();
     const std::size_t width = CGDisplayPixelsWide(display_id);
@@ -24,7 +26,7 @@ std::string modules::display::get_resolution()
     return fmt::format("{}x{}", width, height);
 }
 
-std::string modules::display::get_refresh_rate()
+std::string get_refresh_rate()
 {
     // Custom deleter for CGDisplayModeRef
     const auto cg_display_mode_deleter = [](const CGDisplayModeRef mode) {
@@ -44,3 +46,5 @@ std::string modules::display::get_refresh_rate()
     const double refresh_rate = CGDisplayModeGetRefreshRate(mode.get());
     return fmt::format("{} Hz", static_cast<int>(std::round(refresh_rate)));
 }
+
+}  // namespace modules::display
