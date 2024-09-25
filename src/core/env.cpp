@@ -3,7 +3,7 @@
  */
 
 #include <cstdlib>   // for std::getenv
-#include <optional>  // for std::optional
+#include <optional>  // for std::optional, std::nullopt
 #include <string>    // for std::string
 
 #include "env.hpp"

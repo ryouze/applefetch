@@ -2,8 +2,7 @@
  * @file cpu.cpp
  */
 
-#include <optional>  // for std::optional
-#include <string>    // for std::string
+#include <string>  // for std::string
 
 #include "core/sysctl.hpp"
 #include "cpu.hpp"

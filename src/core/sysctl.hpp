@@ -7,7 +7,7 @@
 #pragma once
 
 #include <cstddef>       // for std::size_t
-#include <optional>      // for std::optional
+#include <optional>      // for std::optional, std::nullopt
 #include <string>        // for std::string
 #include <sys/sysctl.h>  // for ::sysctl, ::sysctlbyname
 #include <type_traits>   // for std::is_arithmetic_v, std::is_standard_layout_v, std::is_trivial_v

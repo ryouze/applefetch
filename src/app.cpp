@@ -2,8 +2,7 @@
  * @file app.cpp
  */
 
-#include <stdexcept>  // for std::runtime_error
-#include <string>     // for std::string
+#include <string>  // for std::string
 
 #include <fmt/color.h>
 #include <fmt/core.h>

@@ -2,11 +2,12 @@
  * @file host.cpp
  */
 
-#include <algorithm>      // for std::remove_if
-#include <array>          // for std::array
+#include <algorithm>      // for std::remove_if, std::all_of
 #include <cctype>         // for std::isspace, std::isdigit
+#include <cstddef>        // for std::size_t
 #include <ctime>          // for std::time_t, std::time, std::difftime
-#include <string>         // for std::string
+#include <exception>      // for std::exception
+#include <string>         // for std::string, std::to_string, std::stoi
 #include <sys/utsname.h>  // for utsname, uname
 
 #include <fmt/core.h>
