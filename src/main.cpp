@@ -22,7 +22,7 @@ int main(int argc,
          char **argv)
 {
     try {
-        // Parse command-line arguments, but do not pass them, as the only checks for help or version
+        // Parse command-line arguments, but do not pass them, as this class only checks for "--help" or "--version"
         core::args::Args(argc, argv);
 
         // Run the application
