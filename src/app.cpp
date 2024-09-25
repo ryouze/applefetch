@@ -8,19 +8,14 @@
 #include <fmt/core.h>
 
 #include "app.hpp"
-#include "core/args.hpp"
 #include "core/env.hpp"
 #include "modules/cpu.hpp"
 #include "modules/display.hpp"
 #include "modules/host.hpp"
 #include "modules/memory.hpp"
 
-void app::run(const int argc,
-              char **argv)
+void app::run()
 {
-    // Process command-line arguments, but do not store them, as the class does nothing (this might throw an ArgsError)
-    core::args::Args(argc, argv);
-
     // Check for NO_COLOR environment variable to determine if color should be disabled
     bool color_enabled = true;
     try {

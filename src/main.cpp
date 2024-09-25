@@ -22,18 +22,16 @@ int main(int argc,
          char **argv)
 {
     try {
+        // Parse command-line arguments, but do not pass them, as the only checks for help or version
+        core::args::Args(argc, argv);
+
         // Run the application
-        app::run(argc, argv);
+        app::run();
     }
     catch (const core::args::ArgsMessage &e) {
         // User requested help or version
         fmt::print("{}\n", e.what());
         return EXIT_SUCCESS;
-    }
-    catch (const core::args::ArgsError &e) {
-        // Failed to parse command-line arguments
-        fmt::print(stderr, "{}\n", e.what());
-        return EXIT_FAILURE;
     }
     catch (const std::exception &e) {
         fmt::print(stderr, "{}\n", e.what());
