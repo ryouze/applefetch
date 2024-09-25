@@ -5,6 +5,7 @@
 #include <array>          // for std::array
 #include <cstddef>        // for std::size_t
 #include <exception>      // for std::exception
+#include <stdexcept>      // for std::runtime_error
 #include <string>         // for std::string, std::stoi, std::to_string
 #include <sys/sysctl.h>   // for sysctl
 #include <sys/time.h>     // for timeval, time_t, time, difftime

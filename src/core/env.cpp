@@ -2,8 +2,9 @@
  * @file env.cpp
  */
 
-#include <cstdlib>  // for std::getenv
-#include <string>   // for std::string
+#include <cstdlib>    // for std::getenv
+#include <stdexcept>  // for std::runtime_error
+#include <string>     // for std::string
 
 #include <fmt/core.h>
 

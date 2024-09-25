@@ -2,7 +2,8 @@
  * @file cpu.cpp
  */
 
-#include <string>  // for std::string
+#include <stdexcept>  // for std::runtime_error
+#include <string>     // for std::string
 
 #include <fmt/core.h>
 

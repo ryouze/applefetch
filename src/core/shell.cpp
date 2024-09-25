@@ -2,10 +2,11 @@
  * @file shell.cpp
  */
 
-#include <array>   // for std::array
-#include <cstdio>  // for popen, pclose, FILE, fgets
-#include <memory>  // for std::unique_ptr
-#include <string>  // for std::string
+#include <array>      // for std::array
+#include <cstdio>     // for popen, pclose, FILE, fgets
+#include <memory>     // for std::unique_ptr
+#include <stdexcept>  // for std::runtime_error
+#include <string>     // for std::string
 
 #include <fmt/core.h>
 
