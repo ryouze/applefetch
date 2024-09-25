@@ -6,7 +6,8 @@
 
 #pragma once
 
-#include <string>  // for std::string
+#include <optional>  // for std::optional
+#include <string>    // for std::string
 
 namespace core::shell {
 
@@ -15,10 +16,10 @@ namespace core::shell {
  *
  * @param command Command to run (e.g., "brew list | wc -l").
  *
- * @return Output of the command (e.g., "139").
+ * @return Output of the command if succeeded (e.g., "139"), std::nullopt otherwise.
  *
- * @throws std::runtime_error If failed to run the command or the command returned no output.
+ * @note std::nullopt is returned if the command fails to execute or the output is empty.
  */
-[[nodiscard]] std::string get_output(const std::string &command);
+[[nodiscard]] std::optional<std::string> get_output(const std::string &command);
 
 }  // namespace core::shell

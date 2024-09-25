@@ -5,6 +5,7 @@
 #include <array>      // for std::array
 #include <cstdio>     // for popen, pclose, FILE, fgets
 #include <memory>     // for std::unique_ptr
+#include <optional>   // for std::optional
 #include <stdexcept>  // for std::runtime_error
 #include <string>     // for std::string
 
@@ -14,15 +15,15 @@
 
 namespace core::shell {
 
-std::string get_output(const std::string &command)
+std::optional<std::string> get_output(const std::string &command)
 {
     std::array<char, 128> buffer;
     std::string result;
     const std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(command.c_str(), "r"), pclose);
 
-    // If failed to execute command, throw
+    // If failed to execute command, return nullopt
     if (!pipe) {
-        throw std::runtime_error(fmt::format("Failed to execute command: {}", command));
+        return std::nullopt;
     }
 
     // Read output of command to string
@@ -30,10 +31,11 @@ std::string get_output(const std::string &command)
         result += buffer.data();
     }
 
-    // If empty string, throw
+    // If empty string, return nullopt
     if (result.empty()) {
-        throw std::runtime_error(fmt::format("Command '{}' returned no output", command));
+        return std::nullopt;
     }
+
     return result;
 }
 

@@ -16,7 +16,7 @@ namespace core::env {
  *
  * @param name Name of the environment variable (e.g., "SHELL").
  *
- * @return Value of the environment variable if found (e.g., "/bin/zsh") if succeeded, std::nullopt otherwise.
+ * @return Value of the environment variable if succeeded (e.g., "/bin/zsh"), std::nullopt otherwise.
  */
 [[nodiscard]] std::optional<std::string> get_variable(const std::string &name);
 

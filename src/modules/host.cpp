@@ -81,16 +81,27 @@ std::string get_uptime()
 
 std::string get_packages()
 {
-    try {
-        return std::to_string(std::stoi(core::shell::get_output("brew list | wc -l")));
-    }
-    catch (const std::exception &) {  // Catch everything, as std::stoi can throw std::invalid_argument, std::out_of_range, or std::exception
-        // Check if brew installed
+
+    if (const auto output = core::shell::get_output("brew list | wc -l")) {
         try {
-            const std::string test = core::shell::get_output("command -v brew");
-            return "Unknown number of packages (Failed to get brew list, but brew is installed)";
+            return std::to_string(std::stoi(output.value()));
         }
-        catch (const std::runtime_error &) {
+        catch (const std::exception &) {
+            // Check if brew installed
+            if (core::shell::get_output("command -v brew")) {
+                return "Unknown number of packages (Brew is installed)";
+            }
+            else {
+                return "Unknown number of packages (Brew is not installed)";
+            }
+        }
+    }
+    else {
+        // Check if brew installed
+        if (core::shell::get_output("command -v brew")) {
+            return "Unknown number of packages (Brew is installed)";
+        }
+        else {
             return "Unknown number of packages (Brew is not installed)";
         }
     }
