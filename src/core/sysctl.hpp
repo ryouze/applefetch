@@ -7,37 +7,34 @@
 #pragma once
 
 #include <cstddef>       // for std::size_t
-#include <stdexcept>     // for std::runtime_error
+#include <optional>      // for std::optional
 #include <string>        // for std::string
-#include <sys/sysctl.h>  // for sysctlbyname
-#include <type_traits>   // for std::is_arithmetic_v
-
-#include <fmt/core.h>  // for fmt::format
+#include <sys/sysctl.h>  // for ::sysctl, ::sysctlbyname
+#include <type_traits>   // for std::is_arithmetic_v, std::is_standard_layout_v, std::is_trivial_v
 
 namespace core::sysctl {
 
 /**
- * @brief Get the value of a sysctl variable.
+ * @brief Get the value of a sysctl variable of arithmetic type.
  *
- * Template function that handles various types of sysctl values.
+ * Template function that handles various arithmetic types of sysctl values.
  *
  * @tparam T Type of the sysctl value to retrieve (e.g., "std::uint64_t").
  * @param name Name of the sysctl variable (e.g., "hw.memsize").
  *
- * @return Value of the sysctl variable of the specified type (e.g., '17179869184").
- *
- * @throws std::runtime_error If failed to get the sysctl value.
+ * @return Value if succeeded (e.g., '17179869184"), std::nullopt otherwise.
  */
 template <typename T>
-[[nodiscard]] inline T get_value(const std::string &name)
+[[nodiscard]] inline std::optional<T> get_value(const std::string &name)
 {
     // Compile-time check for arithmetic type
     static_assert(std::is_arithmetic_v<T>, "get_value() requires an arithmetic type");
+
     T value{};
     std::size_t size = sizeof(T);
 
-    if (sysctlbyname(name.c_str(), &value, &size, nullptr, 0) != 0) {
-        throw std::runtime_error(fmt::format("Failed to get sysctl value for '{}'", name));
+    if (::sysctlbyname(name.c_str(), &value, &size, nullptr, 0) != 0) {
+        return std::nullopt;
     }
 
     return value;
@@ -50,30 +47,59 @@ template <typename T>
  *
  * @param name Name of the sysctl variable (e.g., "kern.osproductversion").
  *
- * @return Value of the sysctl variable as a string (e.g., "14.6.1").
- *
- * @throws std::runtime_error If failed to get the sysctl value.
+ * @return Value if succeeded (e.g., "14.6.1"), std::nullopt otherwise.
  */
-[[nodiscard]] inline std::string get_value(const std::string &name)
+[[nodiscard]] inline std::optional<std::string> get_value(const std::string &name)
 {
-    std::size_t size;
+    std::size_t size = 0;
     // First call with nullptr to determine required buffer size
-    if (sysctlbyname(name.c_str(), nullptr, &size, nullptr, 0) != 0) {
-        throw std::runtime_error(fmt::format("Failed to get sysctl value size for '{}'", name));
+    if (::sysctlbyname(name.c_str(), nullptr, &size, nullptr, 0) != 0) {
+        return std::nullopt;
     }
 
     // Allocate buffer based on required size
     std::string buffer(size, '\0');
 
     // Second call to get the actual data
-    if (sysctlbyname(name.c_str(), buffer.data(), &size, nullptr, 0) != 0) {
-        throw std::runtime_error(fmt::format("Failed to get sysctl value for '{}'", name));
+    if (::sysctlbyname(name.c_str(), buffer.data(), &size, nullptr, 0) != 0) {
+        return std::nullopt;
     }
 
-    // Remove null terminator from buffer
-    buffer.resize(size - 1);
+    // Remove null terminator if present
+    if (!buffer.empty() && buffer.back() == '\0') {
+        buffer.pop_back();
+    }
 
     return buffer;
+}
+
+/**
+ * @brief Get sysctl value using MIB array.
+ *
+ * Template function that handles sysctl values accessed via MIB arrays.
+ *
+ * @tparam T Type of the sysctl value to retrieve.
+ * @param mib Pointer to MIB array.
+ * @param mib_len Length of the MIB array.
+ *
+ * @return Value if succeeded (e.g., "14"), std::nullopt otherwise.
+ */
+template <typename T>
+[[nodiscard]] inline std::optional<T> get_value(const int *mib,
+                                                const std::size_t mib_len)
+{
+    // Ensure that T is a POD (Plain Old Data) type
+    // A POD type in C++ is a type that is compatible with C-style data structures
+    static_assert(std::is_standard_layout_v<T> && std::is_trivial_v<T>, "get_value() requires a POD type");
+
+    T value{};
+    std::size_t size = sizeof(T);
+
+    if (::sysctl(const_cast<int *>(mib), static_cast<u_int>(mib_len), &value, &size, nullptr, 0) != 0) {
+        return std::nullopt;
+    }
+
+    return value;
 }
 
 }  // namespace core::sysctl

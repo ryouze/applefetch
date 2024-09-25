@@ -5,12 +5,8 @@
 #include <algorithm>      // for std::remove_if
 #include <array>          // for std::array
 #include <cctype>         // for std::isspace, std::isdigit
-#include <cstddef>        // for std::size_t
-#include <exception>      // for std::exception
-#include <stdexcept>      // for std::runtime_error
-#include <string>         // for std::string, std::stoi, std::to_string
-#include <sys/sysctl.h>   // for sysctl
-#include <sys/time.h>     // for timeval, time_t, time, difftime
+#include <ctime>          // for std::time_t, std::time, std::difftime
+#include <string>         // for std::string
 #include <sys/utsname.h>  // for utsname, uname
 
 #include <fmt/core.h>
@@ -33,21 +29,21 @@ namespace modules::host {
 
 std::string get_version()
 {
-    try {
-        return fmt::format("macOS {}", core::sysctl::get_value("kern.osproductversion"));
+    if (const auto version_opt = core::sysctl::get_value("kern.osproductversion")) {
+        return fmt::format("macOS {}", *version_opt);
     }
-    catch (const std::runtime_error &e) {
-        return fmt::format("Unknown macOS version ({})", e.what());
+    else {
+        return "Unknown macOS version (Failed to get kern.osproductversion)";
     }
 }
 
 std::string get_model_identifier()
 {
-    try {
-        return core::sysctl::get_value("hw.model");
+    if (const auto model_opt = core::sysctl::get_value("hw.model")) {
+        return *model_opt;
     }
-    catch (const std::runtime_error &e) {
-        return fmt::format("Unknown model identifier ({})", e.what());
+    else {
+        return "Unknown model identifier (Failed to get hw.model)";
     }
 }
 
@@ -62,18 +58,19 @@ std::string get_architecture()
 
 std::string get_uptime()
 {
-    struct timeval boottime;
-    std::size_t len = sizeof(boottime);
-    std::array<int, 2> mib = {CTL_KERN, KERN_BOOTTIME};
+    const int mib[] = {CTL_KERN, KERN_BOOTTIME};
+    const std::size_t mib_len = sizeof(mib) / sizeof(int);
 
-    if (sysctl(mib.data(), mib.size(), &boottime, &len, nullptr, 0) != 0) {
-        return "Unknown uptime (Failed to get boottime)";
+    const auto boottime_opt = core::sysctl::get_value<struct timeval>(mib, mib_len);
+    if (!boottime_opt) {
+        return "Unknown uptime (Failed to get kern.boottime)";
     }
 
-    const time_t bsec = boottime.tv_sec;
-    const time_t now = time(nullptr);
+    const struct timeval boottime = *boottime_opt;
+    const std::time_t bsec = boottime.tv_sec;
+    const std::time_t now = std::time(nullptr);
 
-    const int seconds = static_cast<int>(difftime(now, bsec));
+    const int seconds = static_cast<int>(std::difftime(now, bsec));
     const int days = seconds / (60 * 60 * 24);
     const int hours = (seconds % (60 * 60 * 24)) / (60 * 60);
     const int minutes = (seconds % (60 * 60)) / 60;
@@ -86,13 +83,13 @@ std::string get_packages()
     // Attempt to get the number of packages, assuming brew is installed
     if (auto output = core::shell::get_output("brew list | wc -l")) {
         // Trim whitespace from the output
-        output->erase(std::remove_if(output->begin(), output->end(), std::isspace), output->cend());
+        output->erase(std::remove_if(output->begin(), output->end(), std::isspace), output->end());
 
         // Check if the output is a valid number
         if (!output->empty() && std::all_of(output->begin(), output->end(), std::isdigit)) {
             try {
                 // Convert to integer and back to string to normalize
-                const int package_count = std::stoi(output.value());
+                const int package_count = std::stoi(*output);
                 return std::to_string(package_count);
             }
             catch (const std::exception &) {

@@ -2,10 +2,8 @@
  * @file cpu.cpp
  */
 
-#include <stdexcept>  // for std::runtime_error
-#include <string>     // for std::string
-
-#include <fmt/core.h>
+#include <optional>  // for std::optional
+#include <string>    // for std::string
 
 #include "core/sysctl.hpp"
 #include "cpu.hpp"
@@ -14,11 +12,11 @@ namespace modules::cpu {
 
 std::string get_cpu_model()
 {
-    try {
-        return core::sysctl::get_value("machdep.cpu.brand_string");
+    if (const auto cpu_model_opt = core::sysctl::get_value("machdep.cpu.brand_string")) {
+        return *cpu_model_opt;
     }
-    catch (const std::runtime_error &e) {
-        return fmt::format("Unknown CPU model {}", e.what());
+    else {
+        return "Unknown CPU model (Failed to get machdep.cpu.brand_string)";
     }
 }
 
