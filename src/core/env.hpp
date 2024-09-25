@@ -6,7 +6,8 @@
 
 #pragma once
 
-#include <string>  // for std::string
+#include <optional>  // for std::optional
+#include <string>    // for std::string
 
 namespace core::env {
 
@@ -15,10 +16,8 @@ namespace core::env {
  *
  * @param name Name of the environment variable (e.g., "SHELL").
  *
- * @return Value of the environment variable (e.g., "/bin/zsh").
- *
- * @throws std::runtime_error If failed to get the environment variable.
+ * @return Value of the environment variable if found (e.g., "/bin/zsh") if succeeded, std::nullopt otherwise.
  */
-[[nodiscard]] std::string get_variable(const std::string &name);
+[[nodiscard]] std::optional<std::string> get_variable(const std::string &name);
 
 }  // namespace core::env

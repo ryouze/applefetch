@@ -21,14 +21,8 @@ void run()
 {
     // Check for NO_COLOR environment variable to determine if color should be disabled
     bool color_enabled = true;
-    try {
-        const std::string no_color = core::env::get_variable("NO_COLOR");
-        if (!no_color.empty()) {
-            color_enabled = false;
-        }
-    }
-    catch (const std::runtime_error &) {
-        // NO_COLOR is not set, so color remains enabled by default
+    if (const auto no_color = core::env::get_variable("NO_COLOR"); no_color && !no_color->empty()) {
+        color_enabled = false;
     }
 
     // Helper lambda to print with or without color

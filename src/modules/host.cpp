@@ -98,12 +98,7 @@ std::string get_packages()
 
 std::string get_shell()
 {
-    try {
-        return core::env::get_variable("SHELL");
-    }
-    catch (const std::runtime_error &e) {
-        return fmt::format("Unknown shell ({})", e.what());
-    }
+    return core::env::get_variable("SHELL").value_or("Unknown shell");
 }
 
 }  // namespace modules::host
