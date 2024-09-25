@@ -126,8 +126,8 @@ int main(int argc,
 int test_args::none()
 {
     try {
-        // This class does nothing, unless the first argument is "-h" or "--v", in which case it throws an exception, which should be caught
-        core::args::Args(1, nullptr);
+        char *fake_argv[] = {const_cast<char *>(TEST_EXECUTABLE_NAME)};
+        core::args::Args(1, fake_argv);
         fmt::print("core::args::Args() passed: no arguments.\n");
         return EXIT_SUCCESS;
     }
@@ -143,10 +143,10 @@ int test_args::help()
         char *fake_argv[] = {const_cast<char *>(TEST_EXECUTABLE_NAME), const_cast<char *>("-h")};
         core::args::Args(2, fake_argv);
         // This should never be reached, as the ArgsError exception should be thrown by the constructor
-        fmt::print("core::args::Args() failed: no help message displayed.\n");
+        fmt::print(stderr, "core::args::Args() failed: no help message displayed.\n");
         return EXIT_FAILURE;
     }
-    catch (const core::args::ArgsMessage &) {
+    catch (const std::exception &e) {
         fmt::print("core::args::Args() passed: help message displayed.\n");
         return EXIT_SUCCESS;
     }
@@ -158,10 +158,10 @@ int test_args::version()
         char *fake_argv[] = {const_cast<char *>(TEST_EXECUTABLE_NAME), const_cast<char *>("-v")};
         core::args::Args(2, fake_argv);
         // This should never be reached, as the ArgsError exception should be thrown by the constructor
-        fmt::print("core::args::Args() failed: no version displayed.\n");
+        fmt::print(stderr, "core::args::Args() failed: no version displayed.\n");
         return EXIT_FAILURE;
     }
-    catch (const core::args::ArgsMessage &e) {
+    catch (const std::exception &e) {
         fmt::print("core::args::Args() passed: version displayed: {}\n", e.what());
         return EXIT_SUCCESS;
     }
@@ -173,10 +173,10 @@ int test_args::invalid()
         char *fake_argv[] = {const_cast<char *>(TEST_EXECUTABLE_NAME), const_cast<char *>("hello")};
         core::args::Args(2, fake_argv);
         // This should never be reached, as the ArgsError exception should be thrown by the constructor
-        fmt::print("core::args::Args() failed: invalid argument wasn't caught.\n");
+        fmt::print(stderr, "core::args::Args() failed: invalid argument was not caught.\n");
         return EXIT_FAILURE;
     }
-    catch (const core::args::ArgsError &e) {
+    catch (const std::exception &e) {
         fmt::print("core::args::Args() passed: invalid argument caught: {}\n", e.what());
         return EXIT_SUCCESS;
     }
