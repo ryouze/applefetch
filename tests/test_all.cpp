@@ -137,8 +137,10 @@ int main(int argc,
 int test_args::none()
 {
     try {
-        char *fake_argv[] = {const_cast<char *>(TEST_EXECUTABLE_NAME)};
+        char test_executable_name[] = TEST_EXECUTABLE_NAME;
+        char *fake_argv[] = {test_executable_name};
         core::args::Args(1, fake_argv);
+        // The program should run normally and print system information to console
         fmt::print("core::args::Args() passed: no arguments.\n");
         return EXIT_SUCCESS;
     }
@@ -151,9 +153,11 @@ int test_args::none()
 int test_args::help()
 {
     try {
-        char *fake_argv[] = {const_cast<char *>(TEST_EXECUTABLE_NAME), const_cast<char *>("-h")};
+        char test_executable_name[] = TEST_EXECUTABLE_NAME;
+        char arg_help[] = "-h";
+        char *fake_argv[] = {test_executable_name, arg_help};
         core::args::Args(2, fake_argv);
-        // This should never be reached, as the ArgsError exception should be thrown by the constructor
+        // This should never be reached, as the ArgsMessage exception should be thrown by the constructor
         fmt::print(stderr, "core::args::Args() failed: no help message displayed.\n");
         return EXIT_FAILURE;
     }
@@ -166,9 +170,11 @@ int test_args::help()
 int test_args::version()
 {
     try {
-        char *fake_argv[] = {const_cast<char *>(TEST_EXECUTABLE_NAME), const_cast<char *>("-v")};
+        char test_executable_name[] = TEST_EXECUTABLE_NAME;
+        char arg_version[] = "-v";
+        char *fake_argv[] = {test_executable_name, arg_version};
         core::args::Args(2, fake_argv);
-        // This should never be reached, as the ArgsError exception should be thrown by the constructor
+        // This should never be reached, as the ArgsMessage exception should be thrown by the constructor
         fmt::print(stderr, "core::args::Args() failed: no version displayed.\n");
         return EXIT_FAILURE;
     }
@@ -181,7 +187,9 @@ int test_args::version()
 int test_args::invalid()
 {
     try {
-        char *fake_argv[] = {const_cast<char *>(TEST_EXECUTABLE_NAME), const_cast<char *>("hello")};
+        char test_executable_name[] = TEST_EXECUTABLE_NAME;
+        char arg_hello[] = "hello";
+        char *fake_argv[] = {test_executable_name, arg_hello};
         core::args::Args(2, fake_argv);
         // This should never be reached, as the ArgsError exception should be thrown by the constructor
         fmt::print(stderr, "core::args::Args() failed: invalid argument was not caught.\n");
