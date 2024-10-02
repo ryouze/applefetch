@@ -1,5 +1,8 @@
 # applefetch
 
+[![CI](https://github.com/ryouze/applefetch/actions/workflows/ci.yml/badge.svg)](https://github.com/ryouze/applefetch/actions/workflows/ci.yml)
+[![Release](https://github.com/ryouze/applefetch/actions/workflows/release.yml/badge.svg)](https://github.com/ryouze/applefetch/actions/workflows/release.yml)
+
 applefetch is a CLI system information tool for macOS, inspired by [neofetch](https://github.com/dylanaraps/neofetch).
 
 
