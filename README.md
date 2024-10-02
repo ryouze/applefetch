@@ -45,7 +45,7 @@ Automated testing is also performed on the latest version of macOS using GitHub 
 
 ## Pre-built Binaries
 
-Pre-built binaries are available for macOS (ARM64). You can download the latest versions from the [Releases](../../releases) page.
+Pre-built binaries are available for macOS (ARM64). You can download the latest version from the [Releases](../../releases) page.
 
 
 ## Requirements
