@@ -48,6 +48,12 @@ Automated testing is also performed on the latest version of macOS using GitHub 
 
 Pre-built binaries are available for macOS (ARM64). You can download the latest version from the [Releases](../../releases) page.
 
+To remove macOS quarantine, use the following command:
+
+```sh
+sudo xattr -d com.apple.quarantine <FILE>
+```
+
 
 ## Requirements
 
