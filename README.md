@@ -125,7 +125,7 @@ To install the program, use the following command:
 sudo cmake --install .
 ```
 
-On macOS, this will install the program to `/usr/local/bin`. You can then run the program from any directory using `applefetch`.
+This will install the program to `/usr/local/bin`. You can then run the program from any directory using `applefetch`.
 
 
 ## Usage
