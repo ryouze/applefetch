@@ -4,7 +4,7 @@
 [![Release](https://github.com/ryouze/applefetch/actions/workflows/release.yml/badge.svg)](https://github.com/ryouze/applefetch/actions/workflows/release.yml)
 ![Release version](https://img.shields.io/github/v/release/ryouze/applefetch)
 
-applefetch is a CLI system information tool for macOS, inspired by [neofetch](https://github.com/dylanaraps/neofetch).
+applefetch is a macOS CLI system information tool, inspired by [neofetch](https://github.com/dylanaraps/neofetch).
 
 
 ## Motivation

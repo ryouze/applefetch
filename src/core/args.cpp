@@ -24,7 +24,7 @@ Args::Args(const int argc,
         const std::string help_message =
             "Usage: applefetch [-h] [-v]\n"
             "\n"
-            "CLI system information tool for macOS, inspired by neofetch.\n"
+            "CLI system information tool, inspired by neofetch.\n"
             "\n"
             "Optional arguments:\n"
             "  -h, --help     prints help message and exits\n"
