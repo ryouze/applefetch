@@ -98,7 +98,8 @@ Follow these steps to build the project:
 
 After successful compilation, you can run the program using `./applefetch`. However, it is highly recommended to install the program, so that it can be run from any directory. Refer to the [Install](#install) section below.
 
-**Note:** The mode is set to `Release` by default. To build in `Debug` mode, use `cmake .. -DCMAKE_BUILD_TYPE=Debug`.
+> [!TIP]
+> The mode is set to `Release` by default. To build in `Debug` mode, use `cmake .. -DCMAKE_BUILD_TYPE=Debug`.
 
 
 ## Install
