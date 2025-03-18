@@ -24,6 +24,7 @@ endif()
 # Project options
 option(BUILD_TESTS "Build tests" OFF)
 option(ENABLE_COMPILE_FLAGS "Enable compile flags" ON)
+option(ENABLE_STRIP "Enable symbol stripping for Release builds" ON)
 
 # Enforce out-of-source builds
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
@@ -104,6 +105,15 @@ fetch_and_link_external_dependencies(${PROJECT_NAME}-lib)
 # Add the main executable and link the library
 add_executable(${PROJECT_NAME} src/main.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}-lib)
+
+# Strip symbols for Release builds
+if(CMAKE_BUILD_TYPE STREQUAL "Release" AND ENABLE_STRIP)
+  add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND strip -x $<TARGET_FILE:${PROJECT_NAME}>
+    COMMENT "Stripping local symbols for Release builds on macOS."
+  )
+  message(STATUS "Stripping local symbols for Release builds on macOS.")
+endif()
 
 # Add install target
 include(GNUInstallDirs)
